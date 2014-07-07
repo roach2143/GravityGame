@@ -8,11 +8,11 @@ var gulp = require('gulp'),
 
 var server = express();
 
-server.use(express.static('src/'));
+server.use(express.static('app/'));
 server.use(express.static('.tmp/'));
 
 gulp.task('coffee', function () {
-	gulp.src('src/js/*.coffee')
+	gulp.src('app/js/*.coffee')
 	.pipe(plumber())
 	.pipe(sourcemaps.init())
 	.pipe(coffee())
@@ -22,7 +22,7 @@ gulp.task('coffee', function () {
 });
 
 gulp.task('default', ['coffee'], function () {
-	gulp.watch('src/*.coffee', ['coffee']);
+	gulp.watch('app/js/*.coffee', ['coffee']);
 
 	server.listen(3000);
 });
