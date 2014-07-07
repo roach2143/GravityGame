@@ -10,24 +10,21 @@ requirejs ['js/keys'], (keys) ->
 		width: 20
 		height: 20
 		speed: 3
+		fallSpeed: 0
 		draw: ->
 			ctx.fillStyle = "rgb(0,0,200)"
 			ctx.fillRect @x, @y, @width, @height
 
 	blocks = 
 		block1: {
-			x: canvas.width / 2
-			y: 800
-			width: 400
-			height: 5
+			x: 200
+			y: 400
+			width: 300
+			height: 20
+			draw: ->
+				ctx.fillStyle = "#666"
+				ctx.fillRect @x, @y, @width, @height
 		}
-		block2: {
-			x: canvas.width / 2
-			y: 500
-			width: 400
-			height: 5
-		}
-
 
 	drawBackground = (color = "#333") ->
 		ctx.fillStyle = color
@@ -40,23 +37,27 @@ requirejs ['js/keys'], (keys) ->
 				key.pressed = (e.type == "keydown")
 
 
-	drawBlock = (x, y, width, height) ->
-		ctx.fillStyle = "rgb(200,200,200)"
-		ctx.fillRect x, y, width, height
-
-
 	gameloop = ->
 		drawBackground()
 		player.draw()
 
-		drawBlock(blocks.block1.x, blocks.block1.y, blocks.block1.width, blocks.block1.height)
+		blocks.block1.draw()
 
 		if keys.d.pressed
 			player.x+=player.speed
 
 		if keys.a.pressed
-			player.x-=1
+			player.x-=player.speed
 		
+
+		if player.x < blocks.block1.x or player.x > blocks.block1.x + blocks.block1.width or player.y < blocks.block1.y-blocks.block1.height
+			player.fallSpeed+=0.2
+		else
+			player.fallSpeed=0
+
+
+		if player.fallSpeed > 0
+			player.y+=player.fallSpeed
 
 		setTimeout gameloop, 1000/fps
 
